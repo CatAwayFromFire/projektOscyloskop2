@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscilloscope Control Panel</title>
+{#    
+</head>
+<body>
+    <h1>Oscilloscope Control Panel</h1>
+    
+
+        <!-- Auto-Scale (Command) -->
+        <form action="/commandaut" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="command" value="AUTO_SCALE">
+            <button type="submit" class="btn">Auto Scale</button>
+        </form>
+        
+
+        
+        <!-- Measure vmax (Query) -->
+        <form action="/querymeas:vmaxQ_chan1" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="query" value="vmxa">
+            <button type="submit" class="btn">Measure vmax</button>
+        </form>
+    </div>
+
+
+</body>
+</html>
