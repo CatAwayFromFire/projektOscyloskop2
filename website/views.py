@@ -1,16 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from connection.connect import send_command,send_query
-# Create your views here.
+from connection.connect import send_command, send_query
+from connection.commands import commands,queries
 def index(request):
-    return render(request, 'website/index.html')
-def querybutton(request,text):
-    print(text)
-    data = send_query(text)
-    print("to co yszslo ", data)
-    return HttpResponse(data)
-def commandbutton(request,text):
-    print(text)
-    send_command(text)
+    return render(request, 'website/index.html',{"commands":commands,"queries":queries})
 
-    return HttpResponseRedirect("/")
+def querybutton(request):
+    # Extract the query from the form submission
+    query = request.POST.get('query')
+    if query:
+        print(f"Received query: {query}")
+        data = send_query(query)
+        print(f"Received data from oscilloscope: {data}")
+        return HttpResponse(data)
+    else:
+        return HttpResponse("No query provided", status=400)
+
+def commandbutton(request):
+    # Extract the command from the form submission
+    command = request.POST.get('command')
+    if command:
+        print(f"Received command: {command}")
+        send_command(command)
+        return HttpResponseRedirect("/")  # Redirect to the homepage after sending the command
+    else:
+        return HttpResponse("No command provided", status=400)

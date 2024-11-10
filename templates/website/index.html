@@ -4,29 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oscilloscope Control Panel</title>
-{#    
+
 </head>
 <body>
     <h1>Oscilloscope Control Panel</h1>
     
+    <div class="button-container">
+        <!-- Command Buttons (No response expected) -->
+        {% for button_name, command in commands.items %}
+            <form action="{% url 'commandbutton' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="command" value="{{ command }}">
+                <button type="submit" class="btn">{{ button_name }}</button>
+            </form>
+        {% endfor %}
 
-        <!-- Auto-Scale (Command) -->
-        <form action="/commandaut" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="command" value="AUTO_SCALE">
-            <button type="submit" class="btn">Auto Scale</button>
-        </form>
-        
-
-        
-        <!-- Measure vmax (Query) -->
-        <form action="/querymeas:vmaxQ_chan1" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="query" value="vmxa">
-            <button type="submit" class="btn">Measure vmax</button>
-        </form>
+        <!-- Query Buttons (Response expected) -->
+        {% for button_name, query in queries.items %}
+            <form action="{% url 'querybutton' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="query" value="{{ query }}">
+                <button type="submit" class="btn">{{ button_name }}</button>
+            </form>
+        {% endfor %}
     </div>
 
-
+    <div class="result">
+        {% if measurement_result %}
+            <p>Measurement Result: {{ measurement_result }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>
