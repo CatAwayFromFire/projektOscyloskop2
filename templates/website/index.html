@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oscilloscope Control Panel</title>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
 </head>
 <body>
     <h1>Oscilloscope Control Panel</h1>
-    
+
     <div class="button-container">
         <!-- Command Buttons (No response expected) -->
         {% for button_name, command in commands.items %}
@@ -21,18 +22,45 @@
 
         <!-- Query Buttons (Response expected) -->
         {% for button_name, query in queries.items %}
-            <form action="{% url 'querybutton' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="query" value="{{ query }}">
-                <button type="submit" class="btn">{{ button_name }}</button>
-            </form>
+            <div class="query-button-container">
+                <form action="{% url 'querybutton' %}" method="post" class="query-form" data-query="{{ query }}">
+                    {% csrf_token %}
+                    <button type="button" class="btn query-btn">{{ button_name }}</button>
+                </form>
+                <span class="result" id="result-{{ forloop.counter }}"></span> <!-- Placeholder for result -->
+            </div>
         {% endfor %}
     </div>
 
-    <div class="result">
-        {% if measurement_result %}
-            <p>Measurement Result: {{ measurement_result }}</p>
-        {% endif %}
-    </div>
+    <script>
+        $(document).ready(function(){
+            $(".query-btn").click(function(e){
+                e.preventDefault(); // Prevent default form submission
+
+                const $form = $(this).closest(".query-form");
+                const query = $form.data("query");
+                const resultSpan = $form.siblings(".result");
+
+                $.ajax({
+                    url: "{% url 'querybutton' %}",
+                    type: "POST",
+                    data: {
+                        'query': query,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.result) {
+                            resultSpan.text("Result: " + response.result);
+                        } else {
+                            resultSpan.text("Error: " + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        resultSpan.text("Error: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
