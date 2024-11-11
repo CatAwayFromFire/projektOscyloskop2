@@ -1,23 +1,26 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oscilloscope Control Panel</title>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Oscilloscope Control Panel</h1>
-
+    
     <div class="button-container">
         <!-- Command Buttons (No response expected) -->
         {% for button_name, command in commands.items %}
-            <form action="{% url 'commandbutton' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="command" value="{{ command }}">
-                <button type="submit" class="btn">{{ button_name }}</button>
-            </form>
+            <div class="command-button-container">
+                <form class="command-form" data-command="{{ command }}">
+                    {% csrf_token %}
+                    <button type="button" class="btn command-btn">{{ button_name }}</button>
+                </form>
+                
+            </div>
         {% endfor %}
 
         <!-- Query Buttons (Response expected) -->
@@ -27,15 +30,44 @@
                     {% csrf_token %}
                     <button type="button" class="btn query-btn">{{ button_name }}</button>
                 </form>
-                <span class="result" id="result-{{ forloop.counter }}"></span> <!-- Placeholder for result -->
+                <span class="result" id="result-{{ forloop.counter }}"></span>
             </div>
         {% endfor %}
     </div>
 
     <script>
         $(document).ready(function(){
-            $(".query-btn").click(function(e){
+            // Handle Command Button Clicks
+            $(".command-btn").click(function(e){
                 e.preventDefault(); // Prevent default form submission
+
+                const $form = $(this).closest(".command-form");
+                const command = $form.data("command");
+                const statusSpan = $form.siblings(".command-status");
+
+                $.ajax({
+                    url: "{% url 'commandbutton' %}",
+                    type: "POST",
+                    data: {
+                        'command': command,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            statusSpan.text(response.status);
+                        } else {
+                            statusSpan.text("Error: " + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        statusSpan.text("Error: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // Handle Query Button Clicks
+            $(".query-btn").click(function(e){
+                e.preventDefault();
 
                 const $form = $(this).closest(".query-form");
                 const query = $form.data("query");

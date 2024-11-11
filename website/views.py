@@ -14,11 +14,11 @@ def querybutton(request):
         return JsonResponse({"error": "No query provided"}, status=400)
 
 def commandbutton(request):
-    # Extract the command from the form submission
     command = request.POST.get('command')
     if command:
-        print(f"Received command: {command}")
         send_command(command)
-        return HttpResponseRedirect("/")  # Redirect to the homepage after sending the command
+        return JsonResponse({"status": "Command sent successfully"})
     else:
-        return HttpResponse("No command provided", status=400)
+        return JsonResponse({"error": "No command provided"}, status=400)
+
+
