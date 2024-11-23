@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscyloskop - Interaktywne Zadania</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="parent">
+    <!-- Lewa część z przyciskami -->
+    <div class="div1">
+        <form class="command-button styled-btn" method="POST" action="button/">
+            <input type="hidden" name="csrfmiddlewaretoken" value="2PfuSkWacvfBYvaNS3GqexZYOVFu3CGXu4swYASU8ItAKzSWHvq0WAih4Q5nZqKT">
+            <input type="hidden" name="type" value="command">
+            <input type="hidden" name="query" value="aut">
+            <button type="submit">Autoscale</button>
+        </form>
+        <button class="styled-btn">Measure Max Voltage</button>
+        <button class="styled-btn">Measure Frequency</button>
+        <button class="styled-btn">Measure Pulse Duration</button>
+    </div>
+
+    <!-- Prawa część z zadaniami i formularzami -->
+    <div class="div2">
+        <h2>Zadanie 1: Zmierz maksymalne napięcie</h2>
+        <p>
+            Twoim zadaniem jest zmierzenie maksymalnego napięcia sygnału wyświetlanego na oscyloskopie.
+            Kliknij przycisk <b>"Measure Max Voltage"</b>, aby uzyskać wartość, a następnie wpisz ją w poniższym polu.
+        </p>
+        <form action="/submit_max_voltage" method="POST">
+            <label for="max_voltage">Maksymalne napięcie (V):</label>
+            <input type="text" id="max_voltage" name="max_voltage" placeholder="np. 5.0" required>
+            <button type="submit" class="styled-btn">Zatwierdź</button>
+        </form>
+
+        <hr>
+
+        <h2>Zadanie 2: Użyj funkcji Autoscale</h2>
+        <p>
+            Kliknij przycisk <b>"Autoscale"</b>, aby automatycznie dopasować skalę sygnału do okna oscyloskopu. Następnie wpisz maksymalne napięcie po autoskalowaniu.
+        </p>
+        <form action="/submit_autoscale" method="POST">
+            <label for="autoscale_voltage">Maksymalne napięcie po autoskalowaniu (V):</label>
+            <input type="text" id="autoscale_voltage" name="autoscale_voltage" placeholder="np. 3.5" required>
+            <button type="submit" class="styled-btn">Zatwierdź</button>
+        </form>
+
+        <hr>
+
+        <h2>Zadanie 3: Zmierz częstotliwość sygnału</h2>
+        <p>
+            Kliknij przycisk <b>"Measure Frequency"</b>, aby zmierzyć częstotliwość sygnału. Odczytaj wynik z ekranu i wpisz go w poniższym polu.
+        </p>
+        <form action="/submit_frequency" method="POST">
+            <label for="frequency">Częstotliwość (Hz):</label>
+            <input type="text" id="frequency" name="frequency" placeholder="np. 1000" required>
+            <button type="submit" class="styled-btn">Zatwierdź</button>
+        </form>
+
+        <hr>
+
+        <h2>Zadanie 4: Zmierz czas trwania impulsu</h2>
+        <p>
+            Kliknij przycisk <b>"Measure Pulse Duration"</b>, a następnie odczytaj czas trwania impulsu z oscyloskopu. Wpisz wynik w poniższym polu.
+        </p>
+        <form action="/submit_pulse_duration" method="POST">
+            <label for="pulse_duration">Czas trwania impulsu (s):</label>
+            <input type="text" id="pulse_duration" name="pulse_duration" placeholder="np. 0.005" required>
+            <button type="submit" class="styled-btn">Zatwierdź</button>
+        </form>
+
+        <hr>
+
+        <h2>Zadanie 5: Zidentyfikuj kształt sygnału</h2>
+        <p>
+            Odczytaj kształt sygnału wyświetlanego na oscyloskopie (np. sinusoidalny, prostokątny, trójkątny) i wpisz go poniżej.
+        </p>
+        <form action="/submit_signal_shape" method="POST">
+            <label for="signal_shape">Kształt sygnału:</label>
+            <input type="text" id="signal_shape" name="signal_shape" placeholder="np. sinusoidalny" required>
+            <button type="submit" class="styled-btn">Zatwierdź</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Buttons</title>
+</head>
+<body>
+    <h1>Dynamic Buttons</h1>
+
+    <h2>Commands</h2>
+    {% for label, command in commands.items %}
+    <form method="POST" action="button/">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="command">
+        <input type="hidden" name="query" value="{{ command }}">
+        <button type="submit">{{ label }}</button>
+    </form>
+    {% endfor %}
+
+    <h2>Queries</h2>
+    {% for label, query in queries.items %}
+    <form method="POST" action="button/">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="query">
+        <input type="hidden" name="query" value="{{ query }}">
+        <button type="submit">{{ label }}</button>
+    </form>
+    {% endfor %}
+</body>
+</html>

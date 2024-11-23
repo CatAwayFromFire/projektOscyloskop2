@@ -33,3 +33,30 @@ def send_query(query):
     finally:
         instr.close()
 
+
+import pyvisa
+
+
+def gensetup(freq, volt, func):
+    # Połączenie z oscyloskopem (zmień adres IP lub port)
+    rm = pyvisa.ResourceManager()
+    oscilloscope = rm.open_resource('TCPIP0::192.168.0.100::hislip0::INSTR')  # Adres IP oscyloskopu
+
+    # Wysyłanie komend SCPI do oscyloskopu
+    oscilloscope.write(f':WGEN:FUNC {func.upper()}')  # Wybór funkcji (np. SIN, SQU, RAMP, itp.)
+    oscilloscope.write(f':WGEN:FREQ {freq}')  # Ustawienie częstotliwości
+    oscilloscope.write(f':WGEN:VOLT {volt}')  # Ustawienie amplitudy
+    oscilloscope.write(':WGEN:VOLT:OFFS 0')  # Ustawienie offsetu na 0 V (możesz zmienić jeśli potrzeba)
+
+    # Opcjonalnie: Można ustawić inne parametry, takie jak obciążenie, polaryzacja, itd.
+    oscilloscope.write(':WGEN:OUTP:LOAD FIFTY')  # Ustawienie obciążenia na 50Ω
+    oscilloscope.write(':WGEN:OUTP ON')  # Włączenie wyjścia generatora
+
+    # Zamknięcie połączenia
+    oscilloscope.close()
+
+
+# Przykładowe wywołanie funkcji
+gensetup(1E6, 5, "SIN")  # Ustawienie częstotliwości na 1 MHz, amplitudy na 5 V, funkcji sinusoidalnej
+
+

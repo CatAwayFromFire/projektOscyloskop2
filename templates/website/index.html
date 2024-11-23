@@ -3,29 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Buttons</title>
+    <title>AJAX and Command Buttons</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // AJAX handling for query buttons
+            document.querySelectorAll('.ajax-button').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const query = this.getAttribute('data-query');
+                    const type = this.getAttribute('data-type');
+
+                    fetch('/button/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token
+                        },
+                        body: new URLSearchParams({
+                            query: query,
+                            type: type
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // After query button is clicked, update button text with the response
+                        this.innerText = `${this.innerText}: ${data.data || 'Success'}`;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        this.innerText = 'Error occurred!';
+                    });
+                });
+            });
+
+            // Handle command buttons without page refresh
+            document.querySelectorAll('.command-button').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const query = this.querySelector('input[name="query"]').value;
+                    const button = this.querySelector('button');
+                    const resultSpan = this.querySelector('.response');
+
+                    fetch('/button/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token
+                        },
+                        body: new URLSearchParams({
+                            query: query,
+                            type: 'command'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // After command button is clicked, update button text and show response
+                        button.innerText = `${button.innerText}: Completed`;
+                        resultSpan.innerText = `Command Result: ${data.data || 'Success'}`;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        resultSpan.innerText = 'Error occurred!';
+                    });
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-    <h1>Dynamic Buttons</h1>
+    <h1>AJAX and Command Buttons</h1>
 
-    <h2>Commands</h2>
-    {% for label, command in commands.items %}
-    <form method="POST" action="button/">
-        {% csrf_token %}
-        <input type="hidden" name="type" value="command">
-        <input type="hidden" name="query" value="{{ command }}">
-        <button type="submit">{{ label }}</button>
-    </form>
-    {% endfor %}
-
+    <!-- Query Buttons (AJAX) -->
     <h2>Queries</h2>
     {% for label, query in queries.items %}
-    <form method="POST" action="button/">
-        {% csrf_token %}
-        <input type="hidden" name="type" value="query">
-        <input type="hidden" name="query" value="{{ query }}">
-        <button type="submit">{{ label }}</button>
-    </form>
+        <button 
+            class="ajax-button" 
+            data-query="{{ query }}" 
+            data-type="query">
+            {{ label }}
+        </button>
+        <br>
+    {% endfor %}
+
+    <!-- Command Buttons (Non-AJAX, but prevent page refresh) -->
+    <h2>Commands</h2>
+    {% for label, command in commands.items %}
+        <form class="command-button" method="POST" action="button/">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="command">
+            <input type="hidden" name="query" value="{{ command }}">
+            <button type="submit">{{ label }}</button>
+        </form>
     {% endfor %}
 </body>
 </html>
