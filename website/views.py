@@ -5,20 +5,19 @@ from connection.commands import commands,queries
 def index(request):
     return render(request, 'website/index.html',{"commands":commands,"queries":queries})
 
-def querybutton(request):
-    query = request.POST.get('query')
-    if query:
-        data = send_query(query)
-        return JsonResponse({"result": data})  # Return JSON response
-    else:
-        return JsonResponse({"error": "No query provided"}, status=400)
+def button(request):
 
-def commandbutton(request):
-    command = request.POST.get('command')
-    if command:
-        send_command(command)
-        return JsonResponse({"status": "Command sent successfully"})
-    else:
-        return JsonResponse({"error": "No command provided"}, status=400)
+    message = request.POST.get('query')
+    type_ = request.POST.get('type')
+    print(message,type_)
+    if message:
+        if type_ == "query":
+
+            data = send_query(message)
+            print(data)
+        if type_ == "command":
+
+            send_command(message)
+    return HttpResponseRedirect('/')
 
 
