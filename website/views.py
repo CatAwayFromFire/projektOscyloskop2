@@ -3,21 +3,24 @@ from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from connection.connect import send_command, send_query
 from connection.commands import commands,queries
 def index(request):
-    return render(request, 'website/index.html',{"commands":commands,"queries":queries})
+    return render(request, 'website/index.html', {"commands":commands, "queries":queries})
+
+
 
 def button(request):
+    if request.method == "POST":
+        message = request.POST.get('query')
+        type_ = request.POST.get('type')
 
-    message = request.POST.get('query')
-    type_ = request.POST.get('type')
-    print(message,type_)
-    if message:
-        if type_ == "query":
+        if message:
+            if type_ == "query":
+                # Handle query (AJAX), return JSON
+                data = send_query(message)
+                return JsonResponse({'data': data})
 
-            data = send_query(message)
-            print(data)
-        if type_ == "command":
+            elif type_ == "command":
+                # Handle command (no page refresh, no JSON response)
+                send_command(message)
+                return JsonResponse({'data': 'Command executed successfully'})
 
-            send_command(message)
-    return HttpResponseRedirect('/')
-
-
+    return redirect('/')  # Redirect to homepage or another page after POST
