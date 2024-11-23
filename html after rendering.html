@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscilloscope Control Panel</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
+</head>
+<body>
+    <h1>Oscilloscope Control Panel</h1>
+
+    <div class="button-container">
+        <!-- Command Buttons (No response expected) -->
+        
+            <form action="/command/" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="2bt6PFazRsqrTM6s8qMv575OFboR1nAHSlSAjXrgfc6Pz3kbJ0TUQ4vCFpwciTng">
+                <input type="hidden" name="command" value="aut">
+                <button type="submit" class="btn">autoscale</button>
+            </form>
+        
+
+        <!-- Query Buttons (Response expected) -->
+        
+            <div class="query-button-container">
+                <form action="/query/" method="post" class="query-form" data-query="meas:vmax? chan1">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="2bt6PFazRsqrTM6s8qMv575OFboR1nAHSlSAjXrgfc6Pz3kbJ0TUQ4vCFpwciTng">
+                    <button type="button" class="btn query-btn">measure V max</button>
+                </form>
+                <span class="result" id="result-1"></span> <!-- Placeholder for result -->
+            </div>
+        
+            <div class="query-button-container">
+                <form action="/query/" method="post" class="query-form" data-query="meas:per? chan1">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="2bt6PFazRsqrTM6s8qMv575OFboR1nAHSlSAjXrgfc6Pz3kbJ0TUQ4vCFpwciTng">
+                    <button type="button" class="btn query-btn">measure frequency</button>
+                </form>
+                <span class="result" id="result-2"></span> <!-- Placeholder for result -->
+            </div>
+        
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $(".query-btn").click(function(e){
+                e.preventDefault(); // Prevent default form submission
+
+                const $form = $(this).closest(".query-form");
+                const query = $form.data("query");
+                const resultSpan = $form.siblings(".result");
+
+                $.ajax({
+                    url: "/query/",
+                    type: "POST",
+                    data: {
+                        'query': query,
+                        'csrfmiddlewaretoken': '2bt6PFazRsqrTM6s8qMv575OFboR1nAHSlSAjXrgfc6Pz3kbJ0TUQ4vCFpwciTng'
+                    },
+                    success: function(response) {
+                        if (response.result) {
+                            resultSpan.text("Result: " + response.result);
+                        } else {
+                            resultSpan.text("Error: " + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        resultSpan.text("Error: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
