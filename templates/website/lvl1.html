@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX and Command Buttons</title>
+    <script src="{% static 'script.js' %}"></script>
+</head>
+<body>
+
+
+    <button 
+            class="ajax-button" 
+            data-query="meas:per? chan1" 
+            data-type="query">
+            measure frequency
+        </button>
+
+
+
+        
+        <form class="command-button" method="POST" action="button/">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="command">
+            <input type="hidden" name="query" value="aut">
+            <button type="submit">autosetup</button>
+        </form>
+
+</body>
+</html>

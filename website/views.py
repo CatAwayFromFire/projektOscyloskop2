@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from connection.connect import send_command, send_query
+from connection.connect import send_command, send_query, gensetup
 from connection.commands import commands,queries
 def index(request):
     return render(request, 'website/index.html', {"commands":commands, "queries":queries})
 
-
+def lvl(request,number):
+    gensetup()
+    return render(request, f'website/lvl{number}.html')
 
 def button(request):
     if request.method == "POST":

@@ -57,6 +57,6 @@ def gensetup(freq, volt, func):
 
 
 # Przykładowe wywołanie funkcji
-gensetup(1E6, 5, "SIN")  # Ustawienie częstotliwości na 1 MHz, amplitudy na 5 V, funkcji sinusoidalnej
+
 
 
