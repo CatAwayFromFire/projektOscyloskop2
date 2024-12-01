@@ -1,0 +1,117 @@
+/* Resetowanie marginesów, paddingów i box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tło całej strony */
+body, html {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;  /* Wyrównanie do góry */
+    background-color: #1e1e1e;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;  /* Dodałem trochę paddingu wokół strony, by przyciski nie były przyklejone do krawędzi */
+    overflow: hidden;
+}
+
+/* Kontener dla obu sekcji (lewej i prawej) */
+.parent {
+    display: grid;
+    grid-template-columns: 4fr 1.5fr;   /* Zachowanie proporcji 4:1.5 */
+    grid-template-rows: 1fr;           /* Tylko jeden wiersz */
+    width: 100%;                        /* Szerokość kontenera */
+    height: 80vh;                      /* Wysokość kontenera */
+    gap: 10px;                         /* Odstępy między kolumnami */
+}
+
+/* Lewa część - przyciski */
+.div1 {
+    grid-area: 1 / 1 / 2 / 2;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: #1e1e1e;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column; /* Ustawienie przycisków w jednej kolumnie */
+    justify-content: center; /* Centrowanie w pionie */
+    align-items: center; /* Centrowanie w poziomie */
+    gap: 15px; /* Większy odstęp między przyciskami */
+    overflow: hidden; /* Zapobiega przewijaniu */
+}
+form {
+    display: flex; /* Ustawienie elementów w jednym rzędzie */
+    align-items: center; /* Wyrównanie przycisku względem pola tekstowego */
+    margin-bottom: 20px; /* Odstęp między formularzami */
+}
+
+form input[type="text"] {
+    flex: 1; /* Pole tekstowe zajmuje jak najwięcej miejsca */
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0077cc; /* Dopasowany kolor ramki */
+    border-radius: 8px;
+    margin-right: 10px; /* Odstęp między polem a przyciskiem */
+    outline: none; /* Usunięcie podświetlenia po kliknięciu */
+}
+
+
+
+/* Prawa część - przewijany tekst */
+.div2 {
+    grid-area: 1 / 2 / 2 / 50;
+    overflow-y: auto; /* Przewijanie w pionie tylko w div2 */
+    padding: 20px;
+    background-color: whitesmoke; /* Kolor tła dla prawej strony */
+    border: 4px solid #3399ff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(51, 153, 255, 0.4);
+    height: 100vh; /* Wysokość kontenera na 100vh */
+    scrollbar-width: none; /* Dla Firefoksa: cienki pasek przewijania */
+    scrollbar-color: #333 #7a7a7a; /* Dla Firefoksa: kolor paska przewijania */
+}
+.div2::-webkit-scrollbar {
+    width: 8px; /* Szerokość paska przewijania */
+}
+.div2::-webkit-scrollbar-track {
+    background-color: #7a7a7a; /* Kolor tła paska przewijania */
+}
+
+.styled-btn {
+    background: linear-gradient(135deg, #00aaff, #0077cc); /* Nowy gradient */
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 18px; /* Większy tekst */
+    font-weight: bold;
+    padding: 12px 20px; /* Większe przyciski */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3); /* Zmieniony cień */
+    user-select: none;
+    min-width: 140px; /* Szersze przyciski */
+    text-align: center;
+}
+
+/* Efekt najechania na przycisk */
+.styled-btn:hover {
+    background: linear-gradient(135deg, #00cc00, #006600); /* Ciemniejszy gradient na hover */
+    box-shadow: 0 8px 20px rgba(0, 255, 0, 0.4); /* Zwiększenie cienia */
+    transform: translateY(-4px); /* Lekki efekt unoszenia przycisku */
+}
+
+/* Efekt kliknięcia (wciśnięcie przycisku) */
+.styled-btn:active {
+    transform: translateY(2px); /* Wciśnięcie przycisku */
+    box-shadow: 0 2px 5px rgba(0, 255, 0, 0.3); /* Mniejszy cień po kliknięciu */
+}
+
+/* Styl przycisku z fokusem */
+.styled-btn:focus {
+    outline: none; /* Usuwa kontur po kliknięciu */
+    box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.5); /* Zielony kontur przy fokusem */
+}
