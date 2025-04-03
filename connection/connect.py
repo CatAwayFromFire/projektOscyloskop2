@@ -1,4 +1,5 @@
 import pyvisa
+import os
 
 def format_text(text):
     """Formats the text by replacing underscores with spaces and 'q' with '?'."""
@@ -11,8 +12,9 @@ def send_command(command):
     """Sends a command to the device without expecting data to be returned."""
     rm = pyvisa.ResourceManager()
     command = format_text(command)  # Format command text
+
     try:
-        instr = rm.open_resource('TCPIP0::192.168.0.100::hislip0::INSTR')
+        instr = rm.open_resource(os.environ.get("VISA Address"))
         instr.timeout = 5000  # Set timeout
         instr.write(command)
     except Exception as e:
@@ -25,7 +27,7 @@ def send_query(query):
     rm = pyvisa.ResourceManager()
     query = format_text(query)  # Format query text
     try:
-        instr = rm.open_resource('TCPIP0::192.168.0.100::hislip0::INSTR')
+        instr = rm.open_resource(os.environ.get("VISA Address"))
         instr.timeout = 5000  # Set timeout
         return instr.query(query)
     except Exception as e:
@@ -40,7 +42,7 @@ import pyvisa
 def gensetup(freq, volt, func):
     # Połączenie z oscyloskopem (zmień adres IP lub port)
     rm = pyvisa.ResourceManager()
-    oscilloscope = rm.open_resource('TCPIP0::192.168.0.100::hislip0::INSTR')  # Adres IP oscyloskopu
+    oscilloscope = rm.open_resource(os.environ.get("VISA Address"))   # Adres IP oscyloskopu
 
     # Wysyłanie komend SCPI do oscyloskopu
     oscilloscope.write(f':WGEN:FUNC {func.upper()}')  # Wybór funkcji (np. SIN, SQU, RAMP, itp.)
