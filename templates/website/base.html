@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX and Command Buttons</title>
+    <script src="{% static 'script.js' %}"></script>
+</head>
+<body>
+    <h1>AJAX and Command Buttons</h1>
+
+    <!-- Query Buttons (AJAX) -->
+    <h2>Queries</h2>
+    {% for label, query in queries.items %}
+        <button 
+            class="ajax-button" 
+            data-query="{{ query }}" 
+            data-type="query">
+            {{ label }}
+        </button>
+        <br>
+    {% endfor %}
+
+    <!-- Command Buttons -->
+    <h2>Commands</h2>
+    {% for label, command in commands.items %}
+        <form class="command-button" method="POST" action="/button/">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="command">
+            <input type="hidden" name="query" value="{{ command }}">
+            <button type="submit">{{ label }}</button>
+        </form>
+    {% endfor %}
+</body>
+</html>

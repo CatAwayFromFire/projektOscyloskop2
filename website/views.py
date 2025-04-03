@@ -6,8 +6,13 @@ def index(request):
     return render(request, 'website/index.html', {"commands":commands, "queries":queries})
 
 def lvl(request,number):
-    gensetup()
-    return render(request, f'website/lvl{number}.html')
+    poziom = [{"freq":2000,"volt":5,"func":"sin"},]
+    freq = poziom[number-1]["freq"]
+    volt = poziom[number-1]["volt"]
+    func = poziom[number-1]["func"]
+    send_command("*RST")
+    gensetup(freq,volt,func)
+    return render(request, f'website/lvl{number}.html',poziom[number-1])
 
 def button(request):
     if request.method == "POST":
